@@ -1,48 +1,69 @@
 import React, { useState } from "react";
-import { Item, DrawerLabel, ChestId } from "../inventory";
-import { DRAWERS } from "../data";
+import { Item, ChestId, DrawerLabel } from "../types";
 
 type Props = {
-  initial?: Partial<Item>;
-  onSave: (payload: Omit<Item, "id"> & { id?: string }) => void;
-  onCancel?: () => void;
-  submitLabel?: string;
+  initial: Item;
+  onSave: (data: Item) => void;
+  onCancel: () => void;
+  submitLabel: string;
 };
 
-export default function AddEditItemForm({ initial = {}, onSave, onCancel, submitLabel = "Save" }: Props) {
-  const [name, setName] = useState(initial.name ?? "");
-  const [imageUrl, setImageUrl] = useState(initial.imageUrl ?? "");
-  const [chest, setChest] = useState<ChestId>((initial as Item).chest ?? "chest1");
-  const [drawer, setDrawer] = useState<DrawerLabel>((initial as Item).drawer ?? DRAWERS[0]);
+export default function AddEditItemForm({ initial, onSave, onCancel, submitLabel }: Props) {
+  const [name, setName] = useState(initial.name);
+  const [imageUrl, setImageUrl] = useState(initial.imageUrl);
+  const [uploadFile, setUploadFile] = useState<File | null>(null);
+  const [chest, setChest] = useState<ChestId>(initial.chest);
+  const [drawer, setDrawer] = useState<DrawerLabel>(initial.drawer);
 
-  function submit(e: React.FormEvent) {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
-    onSave({ id: (initial as Item)?.id, name: name.trim(), imageUrl: imageUrl.trim() || placeholder(name), chest, drawer });
-  }
+    let finalImageUrl = imageUrl;
 
-  function placeholder(n: string) {
-    return `https://dummyimage.com/200x200/ddd/000&text=${encodeURIComponent(n)}`;
-  }
+    if (uploadFile) {
+      finalImageUrl = await fileToBase64(uploadFile);
+    }
+
+    onSave({ ...initial, name, imageUrl: finalImageUrl, chest, drawer });
+  };
+
+  const fileToBase64 = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
 
   return (
-    <form onSubmit={submit} className="card">
-      <div style={{display:"flex", gap:8}}>
-        <input value={name} onChange={(e)=>setName(e.target.value)} placeholder="Item name" className="input" />
-        <input value={imageUrl} onChange={(e)=>setImageUrl(e.target.value)} placeholder="Image URL (optional)" className="input" />
-      </div>
-      <div className="form-row">
-        <select value={chest} onChange={(e)=>setChest(e.target.value as ChestId)} className="input">
-          <option value="chest1">Tool Chest 1</option>
-          <option value="chest2">Tool Chest 2</option>
-        </select>
-        <select value={drawer} onChange={(e)=>setDrawer(e.target.value as DrawerLabel)} className="input">
-          {DRAWERS.map(d=> <option key={d} value={d}>{d}</option>)}
-        </select>
-        <div style={{display:"flex", gap:8}}>
-          <button type="submit" className="button">{submitLabel}</button>
-          <button type="button" className="button" onClick={onCancel}>Cancel</button>
-        </div>
+    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Tool Name" required />
+
+      <label style={{ fontSize: "0.85rem" }}>Upload Image (optional)</label>
+      <input type="file" accept="image/*" onChange={e => setUploadFile(e.target.files?.[0] ?? null)} />
+
+      <label style={{ fontSize: "0.85rem" }}>Or Enter Image URL</label>
+      <input type="text" value={imageUrl} onChange={e => setImageUrl(e.target.value)} placeholder="https://example.com/image.jpg" />
+
+      <select value={chest} onChange={e => setChest(e.target.value as ChestId)}>
+        <option value="chest1">Chest 1</option>
+        <option value="chest2">Chest 2</option>
+      </select>
+
+      <select value={drawer} onChange={e => setDrawer(e.target.value as DrawerLabel)}>
+        <option value="Top">Top</option>
+        <option value="2nd left">2nd left</option>
+        <option value="3rd left">3rd left</option>
+        <option value="4th left">4th left</option>
+        <option value="5th left">5th left</option>
+        <option value="2nd right">2nd right</option>
+        <option value="3rd right">3rd right</option>
+        <option value="4th right">4th right</option>
+        <option value="5th right">5th right</option>
+      </select>
+
+      <div style={{ display: "flex", gap: 8 }}>
+        <button type="submit" className="button">{submitLabel}</button>
+        <button type="button" onClick={onCancel} className="button">Cancel</button>
       </div>
     </form>
   );

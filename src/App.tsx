@@ -6,6 +6,7 @@ import DrawerPage from "./pages/DrawerPage";
 import SearchResults from "./pages/SearchResults";
 import ItemDetail from "./pages/ItemDetail";
 import "./App.css";
+import { ItemsProvider }  from "./context/ItemsContext";
 
 export default function App() {
   const [query, setQuery] = useState("");
@@ -13,6 +14,7 @@ export default function App() {
   return (
     <div>
       <Header query={query} setQuery={setQuery} />
+      <ItemsProvider>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/chest/:chestId/drawer/:drawerLabel" element={<DrawerPage />} />
@@ -20,6 +22,7 @@ export default function App() {
         <Route path="/item/:id" element={<ItemDetail />} />
         <Route path="*" element={<div className="container">Page not found</div>} />
       </Routes>
+      </ItemsProvider>
     </div>
   );
 }
