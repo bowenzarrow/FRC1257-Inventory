@@ -1,26 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import Header from "./components/Header";
+import Home from "./pages/Home";
+import DrawerPage from "./pages/DrawerPage";
+import SearchResults from "./pages/SearchResults";
+import ItemDetail from "./pages/ItemDetail";
+import "./App.css";
 
-function App() {
+export default function App() {
+  const [query, setQuery] = useState("");
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header query={query} setQuery={setQuery} />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/chest/:chestId/drawer/:drawerLabel" element={<DrawerPage />} />
+        <Route path="/search" element={<SearchResults />} />
+        <Route path="/item/:id" element={<ItemDetail />} />
+        <Route path="*" element={<div className="container">Page not found</div>} />
+      </Routes>
     </div>
   );
 }
-
-export default App;

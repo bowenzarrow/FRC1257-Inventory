@@ -1,38 +1,118 @@
-.App {
-  text-align: center;
+/* Container */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Grid for chests */
+.grid {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Each chest card */
+.card {
+  flex: 1 1 400px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  background: #f9f9f9;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.08);
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Small descriptive text */
+.small {
+  font-size: 0.85rem;
+  color: #555;
+}
+
+/* Drawer buttons grid */
+.drawer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 12px;
+}
+
+/* Drawer button */
+.drawer-btn {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+  background-color: #e0e0e0;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s all;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.drawer-btn:hover {
+  background-color: #d4d4d4;
+  transform: translateY(-1px);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Table styling */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+.table th, .table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f0f0f0;
+  font-weight: 600;
+}
+
+/* Image thumbnail */
+.thumb {
+  max-width: 60px;
+  max-height: 60px;
+  object-fit: contain;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Buttons */
+.button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+  background-color: #e0e0e0;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s all;
+}
+
+.button:hover {
+  background-color: #d4d4d4;
+  transform: translateY(-1px);
+}
+
+/* Form input styling */
+input[type="text"], input[type="url"], select {
+  width: 100%;
+  padding: 6px 10px;
+  margin: 4px 0;
+  box-sizing: border-box;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+}
+
+/* Form buttons container */
+.form-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
 }
