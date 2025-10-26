@@ -13,13 +13,21 @@ self.addEventListener('install', (event) => {
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      return (
-        cachedResponse ||
-        fetch(event.request).catch(() => caches.match('/index.html'))
-      );
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+
+    
+      return fetch(event.request).catch(() => {
+
+        if (event.request.mode === 'navigate') {
+          return caches.match('/index.html');
+        }
+      });
     })
   );
 });
+
 
 // Activate (clean up old caches)
 self.addEventListener('activate', (event) => {
