@@ -2,8 +2,10 @@ import React from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useItems } from "../contexts/ItemsContext";
 import { Item } from "../types";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 export default function SearchResults() {
+  useDocumentTitle("Search Results");
   const [params] = useSearchParams();
   const q = params.get("q")?.trim().toLowerCase() ?? "";
   const navigate = useNavigate();

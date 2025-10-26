@@ -8,6 +8,7 @@ import { SAMPLE_ITEMS } from "../data";
 import { DrawerLabel } from "../types";
 
 export default function DrawerPage() {
+  
   const { chestId, drawerLabel } = useParams<{ chestId: string; drawerLabel: string }>();
   const navigate = useNavigate();
 
@@ -19,6 +20,11 @@ export default function DrawerPage() {
 
   // Decode drawer name
   const drawer = drawerLabel ? decodeURIComponent(drawerLabel) : "";
+  useEffect(() => {
+  if (chestId && drawer) {
+    document.title = `Drawer: ${drawer} — ${chestId}`;
+  }
+}, [chestId, drawer]);
 
   // Filter items in this drawer safely (hooks not conditional)
   const filtered = useMemo(

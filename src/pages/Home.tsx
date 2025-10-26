@@ -4,6 +4,7 @@ import chest1Img from "../assets/chest1.png";
 import chest2Img from "../assets/chest2.png";
 import { useItems } from "../contexts/ItemsContext"; // Make sure provider wraps App
 import { Item } from "../types";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 const DRAWERS = [
   "Top",
@@ -18,6 +19,7 @@ const DRAWERS = [
 ];
 
 export default function Home() {
+  useDocumentTitle("Inventory Home");
   const navigate = useNavigate();
   const { items, setItems } = useItems();
   const fileInputRef = useRef<HTMLInputElement>(null);
