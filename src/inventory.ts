@@ -1,4 +1,4 @@
-export type ChestId = "chest1" | "chest2";
+export type ChestId = "Electronics Chest" | "Build Chest";
 
 export type DrawerLabel = 
   | "Top"

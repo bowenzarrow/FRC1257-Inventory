@@ -19,14 +19,14 @@ export const SAMPLE_ITEMS: Item[] = [
     id: "i1",
     name: "Screwdriver",
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/4/41/Flat-head_screwdriver.png",
-    chest: "chest1",
+    chest: "Electronics Chest",
     drawer: "Top",
   },
   {
     id: "i2",
     name: "Hammer",
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Steel_hammer.jpg",
-    chest: "chest1",
+    chest: "Build Chest",
     drawer: "2nd left",
   }
 ];

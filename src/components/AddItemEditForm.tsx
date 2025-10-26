@@ -88,8 +88,8 @@ export default function AddEditItemForm({
           onChange={(e) => setChest(e.target.value as ChestId)}
           className="input"
         >
-          <option value="chest1">Tool Chest 1</option>
-          <option value="chest2">Tool Chest 2</option>
+          <option value="Electronics Chest">Electronics Chest</option>
+          <option value="Build Chest">Build Chest</option>
         </select>
 
         <select

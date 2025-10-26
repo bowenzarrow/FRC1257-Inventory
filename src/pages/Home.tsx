@@ -134,7 +134,7 @@ export default function Home() {
         {DRAWERS.map((drawer, i) => (
           <button
             key={drawer}
-            onClick={() => handleClick("chest1", drawer)}
+            onClick={() => handleClick("Electronics Chest", drawer)}
             style={{
               position: "absolute",
               top: chest1Positions[i].top,
@@ -155,11 +155,11 @@ export default function Home() {
 
       {/* Chest 2 */}
       <div style={{ marginBottom: 32, position: "relative", width: 400 }}>
-        <img src={chest2Img} alt="Chest 2" style={{ width: "100%" }} />
+        <img src={chest2Img} alt="Build Chest" style={{ width: "100%" }} />
         {DRAWERS.map((drawer, i) => (
           <button
             key={drawer}
-            onClick={() => handleClick("chest2", drawer)}
+            onClick={() => handleClick("Build Chest", drawer)}
             style={{
               position: "absolute",
               top: chest2Positions[i].top,

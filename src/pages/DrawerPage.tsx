@@ -89,10 +89,10 @@ export default function DrawerPage() {
 
       {/* Add Item Form */}
       {showAdd && <AddEditItemForm
-        onSave={(data) => addItem({ ...data, chest: chestId as "chest1" | "chest2", drawer: drawer as DrawerLabel  })}
+        onSave={(data) => addItem({ ...data, chest: chestId as "Electronics Chest" | "Build Chest", drawer: drawer as DrawerLabel  })}
         onCancel={() => setShowAdd(false)}
         submitLabel="Add"
-        initial={{ name: "", imageUrl: "", chest: chestId as "chest1" | "chest2", drawer: drawer as DrawerLabel }}
+        initial={{ name: "", imageUrl: "", chest: chestId as "Electronics Chest" | "Build Chest", drawer: drawer as DrawerLabel }}
       />}
 
       {/* Edit Item Form */}
