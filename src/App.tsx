@@ -5,21 +5,24 @@ import Home from "./pages/Home";
 import DrawerPage from "./pages/DrawerPage";
 import SearchResults from "./pages/SearchResults";
 import ItemDetail from "./pages/ItemDetail";
+import { ItemsProvider } from "./contexts/ItemsContext";
 import "./App.css";
 
 export default function App() {
   const [query, setQuery] = useState("");
 
   return (
-    <div>
-      <Header query={query} setQuery={setQuery} />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/chest/:chestId/drawer/:drawerLabel" element={<DrawerPage />} />
-        <Route path="/search" element={<SearchResults />} />
-        <Route path="/item/:id" element={<ItemDetail />} />
-        <Route path="*" element={<div className="container">Page not found</div>} />
-      </Routes>
-    </div>
+    <ItemsProvider>
+      <div>
+        <Header query={query} setQuery={setQuery} />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/chest/:chestId/drawer/:drawerLabel" element={<DrawerPage />} />
+          <Route path="/search" element={<SearchResults />} />
+          <Route path="/item/:id" element={<ItemDetail />} />
+          <Route path="*" element={<div className="container">Page not found</div>} />
+        </Routes>
+      </div>
+    </ItemsProvider>
   );
 }

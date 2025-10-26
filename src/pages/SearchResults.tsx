@@ -1,14 +1,13 @@
 import React from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { useLocalStorage } from "../hooks/useLocalStorage";
-import { SAMPLE_ITEMS } from "../data";
+import { useItems } from "../contexts/ItemsContext";
 import { Item } from "../types";
 
 export default function SearchResults() {
   const [params] = useSearchParams();
   const q = params.get("q")?.trim().toLowerCase() ?? "";
   const navigate = useNavigate();
-  const [items] = useLocalStorage<Item[]>("drawer_app_items_v1", SAMPLE_ITEMS);
+  const { items } = useItems();
 
   if (!q) {
     return <div className="container">No search query.</div>;

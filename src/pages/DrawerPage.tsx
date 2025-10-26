@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Item } from "../types";
-import { useLocalStorage } from "../hooks/useLocalStorage";
+import { useItems } from "../contexts/ItemsContext";
 import { uid } from "../utils";
 import AddEditItemForm from "../components/AddItemEditForm";
 import { SAMPLE_ITEMS } from "../data"; 
@@ -12,12 +12,8 @@ export default function DrawerPage() {
   const navigate = useNavigate();
 
   // Top-level hooks
-  const [items, setItems] = useLocalStorage<Item[]>("drawer_app_items_v1", []);
-  useEffect(() => {
-  if (items.length === 0) {
-    setItems(SAMPLE_ITEMS);
-  }
-}, []);
+  const { items, setItems } = useItems();
+  // seeding is handled by ItemsProvider
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showAdd, setShowAdd] = useState(false);
 
