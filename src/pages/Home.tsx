@@ -24,15 +24,15 @@ export default function Home() {
 
   // Example positions for chest1 drawers (adjust top/left for your image)
   const chest1Positions = [
-    { top: 10, left: 160 },
-    { top: 60, left: 10 },
-    { top: 60, left: 160 },
-    { top: 60, left: 310 },
-    { top: 110, left: 10 },
-    { top: 110, left: 160 },
-    { top: 110, left: 310 },
-    { top: 160, left: 10 },
-    { top: 160, left: 160 },
+ { top: 40, left: 160 }, //Top
+    { top: 80, left: 80 }, //2nd Left 
+    { top: 100, left: 140 }, //3rd Left
+    { top: 120, left: 80 }, //4th Left
+    { top: 160, left: 120 }, //5th Left
+    { top: 80, left: 270 }, //2nd Right
+    { top: 100, left: 310 }, //3rd Right
+    { top: 120, left: 270 }, //4th Right
+    { top: 160, left: 290 }, //5th Right
   ];
 
   // Example positions for chest2 drawers (can be same or different)
