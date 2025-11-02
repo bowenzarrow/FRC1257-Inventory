@@ -1,6 +1,6 @@
 export type ChestId = "Electronics Chest" | "Build Chest";
 
-export type DrawerLabel = 
+export type DrawerLabel =
   | "Top"
   | "2nd left"
   | "3rd left"
@@ -11,11 +11,11 @@ export type DrawerLabel =
   | "4th right"
   | "5th right";
 
-
 export type Item = {
   id: string;
   name: string;
   imageUrl: string;
   chest: ChestId;
   drawer: DrawerLabel;
+  category: string; // 🆕 new field
 };

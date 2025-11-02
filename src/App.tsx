@@ -7,6 +7,8 @@ import SearchResults from "./pages/SearchResults";
 import ItemDetail from "./pages/ItemDetail";
 import { ItemsProvider } from "./contexts/ItemsContext";
 import "./App.css";
+import CategoriesPage from "./pages/CategoriesPage";
+import CategoryResults from "./pages/CategoryResults";
 
 export default function App() {
   const [query, setQuery] = useState("");
@@ -21,6 +23,8 @@ export default function App() {
           <Route path="/search" element={<SearchResults />} />
           <Route path="/item/:id" element={<ItemDetail />} />
           <Route path="*" element={<div className="container">Page not found</div>} />
+          <Route path="/categories" element={<CategoriesPage />} />
+          <Route path="/category/:name" element={<CategoryResults />} />
         </Routes>
       </div>
     </ItemsProvider>

@@ -17,4 +17,5 @@ export type Item = {
   imageUrl: string;
   chest: ChestId;
   drawer: DrawerLabel;
+  category?: string;
 };

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Item, DrawerLabel, ChestId } from "../inventory";
 import { DRAWERS } from "../data";
+import { useCategories } from "../hooks/useCategories";
 
 type Props = {
   initial?: Partial<Item>;
@@ -17,8 +18,15 @@ export default function AddEditItemForm({
 }: Props) {
   const [name, setName] = useState(initial.name ?? "");
   const [imageUrl, setImageUrl] = useState(initial.imageUrl ?? "");
-  const [chest, setChest] = useState<ChestId>((initial as Item).chest ?? "chest1");
-  const [drawer, setDrawer] = useState<DrawerLabel>((initial as Item).drawer ?? DRAWERS[0]);
+  const [chest, setChest] = useState<ChestId>(
+    (initial as Item).chest ?? "Electronics Chest"
+  );
+  const [drawer, setDrawer] = useState<DrawerLabel>(
+    (initial as Item).drawer ?? DRAWERS[0]
+  );
+  const [category, setCategory] = useState(initial.category ?? "");
+
+  const { categories } = useCategories();
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -29,6 +37,7 @@ export default function AddEditItemForm({
       imageUrl: imageUrl.trim() || placeholder(name),
       chest,
       drawer,
+      category,
     });
   }
 
@@ -36,11 +45,9 @@ export default function AddEditItemForm({
     return `https://dummyimage.com/200x200/ddd/000&text=${encodeURIComponent(n)}`;
   }
 
-  // Handle image file upload
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = (event) => {
       const dataUrl = event.target?.result as string;
@@ -51,6 +58,7 @@ export default function AddEditItemForm({
 
   return (
     <form onSubmit={submit} className="card">
+      {/* 🧱 Basic info */}
       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
         <input
           name="name"
@@ -76,12 +84,18 @@ export default function AddEditItemForm({
           <img
             src={imageUrl}
             alt="Preview"
-            style={{ width: 80, height: 80, objectFit: "cover", border: "1px solid #ccc" }}
+            style={{
+              width: 80,
+              height: 80,
+              objectFit: "cover",
+              border: "1px solid #ccc",
+            }}
           />
         </div>
       )}
 
-      <div className="form-row">
+      {/* 🧩 Drawer + Chest */}
+      <div className="form-row" style={{ display: "flex", gap: 8, marginTop: 8 }}>
         <select
           name="chest"
           value={chest}
@@ -104,15 +118,32 @@ export default function AddEditItemForm({
             </option>
           ))}
         </select>
+      </div>
 
-        <div style={{ display: "flex", gap: 8 }}>
-          <button type="submit" className="button">
-            {submitLabel}
-          </button>
-          <button type="button" className="button" onClick={onCancel}>
-            Cancel
-          </button>
-        </div>
+      {/* 🆕 Category selection */}
+      <div style={{ marginTop: 8 }}>
+        <label>Category:</label>
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="input"
+        >
+          <option value="">None</option>
+          {categories.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+        <button type="submit" className="button">
+          {submitLabel}
+        </button>
+        <button type="button" className="button" onClick={onCancel}>
+          Cancel
+        </button>
       </div>
     </form>
   );
