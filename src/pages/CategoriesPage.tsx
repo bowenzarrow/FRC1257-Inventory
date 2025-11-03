@@ -4,12 +4,36 @@ import { useCategories } from "../hooks/useCategories";
 import { useItems } from "../contexts/ItemsContext";
 
 export default function CategoriesPage() {
-  const { categories, addCategory, removeCategory, renameCategory } = useCategories();
+  const {
+    categories,
+    addCategory,
+    removeCategory,
+    renameCategory,
+    editingEnabled,
+    setEditingEnabled,
+  } = useCategories();
+
   const { items, setItems } = useItems();
   const [newCategory, setNewCategory] = useState("");
   const [editingCategory, setEditingCategory] = useState<string | null>(null);
   const [editingName, setEditingName] = useState("");
   const navigate = useNavigate();
+
+  // 🔒 toggle editing lock
+  function toggleEditing() {
+    if (editingEnabled) {
+      setEditingEnabled(false);
+      alert("Category editing is now locked.");
+    } else {
+      const pw = prompt("Enter password to unlock category editing:");
+      if (pw === "1257") {
+        setEditingEnabled(true);
+        alert("Category editing is now unlocked.");
+      } else {
+        alert("Incorrect password. Editing remains locked.");
+      }
+    }
+  }
 
   // Navigate to category page
   function handleClickCategory(category: string) {
@@ -18,6 +42,7 @@ export default function CategoriesPage() {
 
   // Add new category
   function handleAddCategory() {
+    if (!editingEnabled) return alert("Editing is locked.");
     const trimmed = newCategory.trim();
     if (!trimmed || categories.includes(trimmed)) return;
     addCategory(trimmed);
@@ -26,6 +51,7 @@ export default function CategoriesPage() {
 
   // Delete a category
   function handleDeleteCategory(category: string) {
+    if (!editingEnabled) return alert("Editing is locked.");
     if (!window.confirm(`Delete category "${category}"? Items will be moved to "None".`)) return;
 
     setItems((prev) =>
@@ -39,19 +65,19 @@ export default function CategoriesPage() {
 
   // Start editing a category
   function startEditCategory(category: string) {
+    if (!editingEnabled) return alert("Editing is locked.");
     setEditingCategory(category);
     setEditingName(category);
   }
 
   // Save edited category
   function saveEditCategory() {
+    if (!editingEnabled) return alert("Editing is locked.");
     const trimmed = editingName.trim();
     if (!trimmed || trimmed === editingCategory || categories.includes(trimmed)) return;
 
-    // Rename category
     renameCategory(editingCategory!, trimmed);
 
-    // Update items that had the old category
     setItems((prev) =>
       prev.map((item) =>
         item.category === editingCategory ? { ...item, category: trimmed } : item
@@ -64,7 +90,12 @@ export default function CategoriesPage() {
 
   return (
     <div className="container">
-      <h2>All Categories</h2>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+        <h2>All Categories</h2>
+        <button className="button" onClick={toggleEditing}>
+          {editingEnabled ? "🔒 Lock Editing" : "🔓 Unlock Editing"}
+        </button>
+      </div>
 
       {/* Add new category */}
       <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
@@ -74,8 +105,9 @@ export default function CategoriesPage() {
           onChange={(e) => setNewCategory(e.target.value)}
           placeholder="New category"
           className="input"
+          disabled={!editingEnabled}
         />
-        <button className="button" onClick={handleAddCategory}>
+        <button className="button" onClick={handleAddCategory} disabled={!editingEnabled}>
           Add
         </button>
       </div>
@@ -109,9 +141,10 @@ export default function CategoriesPage() {
                     value={editingName}
                     onChange={(e) => setEditingName(e.target.value)}
                     style={{ width: "100%", marginBottom: 6 }}
+                    disabled={!editingEnabled}
                   />
                   <div style={{ display: "flex", gap: 4 }}>
-                    <button className="button" onClick={saveEditCategory}>
+                    <button className="button" onClick={saveEditCategory} disabled={!editingEnabled}>
                       Save
                     </button>
                     <button
@@ -139,6 +172,7 @@ export default function CategoriesPage() {
                           e.stopPropagation();
                           startEditCategory(c);
                         }}
+                        disabled={!editingEnabled}
                       >
                         Edit
                       </button>
@@ -154,6 +188,7 @@ export default function CategoriesPage() {
                           e.stopPropagation();
                           handleDeleteCategory(c);
                         }}
+                        disabled={!editingEnabled}
                       >
                         Delete
                       </button>
@@ -163,6 +198,11 @@ export default function CategoriesPage() {
               )}
             </div>
           ))}
+        </div>
+      )}
+      {!editingEnabled && (
+        <div style={{ color: "red", marginTop: 8, fontWeight: 600 }}>
+          Category editing is currently locked.
         </div>
       )}
     </div>

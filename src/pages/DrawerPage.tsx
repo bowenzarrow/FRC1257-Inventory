@@ -5,83 +5,62 @@ import { useItems } from "../contexts/ItemsContext";
 import { uid } from "../utils";
 import AddEditItemForm from "../components/AddItemEditForm";
 import { DrawerLabel } from "../types";
-import { useCategories } from "../hooks/useCategories"; // 🆕 import
+import { useCategories } from "../hooks/useCategories";
 
 export default function DrawerPage() {
   const { chestId, drawerLabel } = useParams<{ chestId: string; drawerLabel: string }>();
   const navigate = useNavigate();
   const { items, setItems } = useItems();
+
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showAdd, setShowAdd] = useState(false);
 
-  // 🆕 category filter state
-  const { categories } = useCategories();
-  const [categoryFilter, setCategoryFilter] = useState<string>("");
+  const { categories, editingEnabled, setEditingEnabled } = useCategories();
 
-  // Decode drawer name
   const drawer = drawerLabel ? decodeURIComponent(drawerLabel) : "";
+
   useEffect(() => {
     if (chestId && drawer) {
       document.title = `Drawer: ${drawer} — ${chestId}`;
     }
   }, [chestId, drawer]);
 
-  // Filter items in this drawer, then apply category filter
   const filtered = useMemo(() => {
     let base =
       chestId && drawerLabel
         ? items.filter((i) => i.chest === chestId && i.drawer === drawer)
         : [];
-    if (categoryFilter) base = base.filter((i) => i.category === categoryFilter);
     return base;
-  }, [items, chestId, drawer, drawerLabel, categoryFilter]);
+  }, [items, chestId, drawer, drawerLabel]);
 
-  // Early return if params invalid
   if (!chestId || !drawerLabel) return <div className="container">Invalid drawer</div>;
 
-  // Add item
   function addItem(payload: Omit<Item, "id"> & { id?: string }) {
+    if (!editingEnabled) return;
     const id = payload.id ?? uid("it");
     setItems((prev) => [
-      {
-        id,
-        name: payload.name,
-        imageUrl: payload.imageUrl,
-        chest: payload.chest,
-        drawer: payload.drawer,
-        category: payload.category, // 🆕 include category
-      },
+      { id, ...payload },
       ...prev,
     ]);
     setShowAdd(false);
   }
 
-  // Delete item
   function deleteItem(id: string) {
+    if (!editingEnabled) return;
     if (!window.confirm("Delete this item?")) return;
     setItems((prev) => prev.filter((i) => i.id !== id));
   }
 
-  // Start editing
   function startEdit(id: string) {
+    if (!editingEnabled) return;
     setEditingId(id);
   }
 
-  // Save edited item
   function saveEdit(payload: Omit<Item, "id"> & { id?: string }) {
-    if (!payload.id) return;
+    if (!editingEnabled || !payload.id) return;
     setItems((prev) =>
       prev.map((i) =>
-        i.id === payload.id
-          ? {
-              id: payload.id,
-              name: payload.name,
-              imageUrl: payload.imageUrl,
-              chest: payload.chest,
-              drawer: payload.drawer,
-              category: payload.category, // 🆕 include category
-            }
-          : i
+        i.id === payload.id ? { ...i, ...payload } : i
       )
     );
     setEditingId(null);
@@ -89,9 +68,24 @@ export default function DrawerPage() {
 
   const editingItem = items.find((i) => i.id === editingId || "");
 
+  // 🔒 Toggle editing lock
+  function toggleEditing() {
+    if (editingEnabled) {
+      setEditingEnabled(false);
+      alert("Editing is now locked.");
+    } else {
+      const pw = prompt("Enter password to unlock editing:");
+      if (pw === "1257") {
+        setEditingEnabled(true);
+        alert("Editing is now unlocked.");
+      } else {
+        alert("Incorrect password. Editing remains locked.");
+      }
+    }
+  }
+
   return (
     <div className="container">
-      {/* Header with Back */}
       <div
         style={{
           display: "flex",
@@ -109,33 +103,22 @@ export default function DrawerPage() {
           </span>
         </div>
         <div>
-          <button className="button" type="button" onClick={() => setShowAdd((s) => !s)}>
+          <button className="button" type="button" onClick={toggleEditing}>
+            {editingEnabled ? "🔒 Lock Editing" : "🔓 Unlock Editing"}
+          </button>
+          <button
+            className="button"
+            type="button"
+            onClick={() => setShowAdd((s) => !s)}
+            disabled={!editingEnabled}
+            style={{ marginLeft: 8 }}
+          >
             {showAdd ? "Close" : "Add Item"}
           </button>
         </div>
       </div>
 
-      {/* 🧩 Category Filter */}
-      {categories.length > 0 && (
-        <div style={{ marginBottom: 8 }}>
-          <label>Filter by category: </label>
-          <select
-            value={categoryFilter}
-            onChange={(e) => setCategoryFilter(e.target.value)}
-            className="input"
-          >
-            <option value="">All</option>
-            {categories.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
-      {/* Add Item Form */}
-      {showAdd && (
+      {showAdd && editingEnabled && (
         <AddEditItemForm
           onSave={(data) =>
             addItem({
@@ -155,7 +138,6 @@ export default function DrawerPage() {
         />
       )}
 
-      {/* Edit Item Form */}
       {editingId && editingItem && (
         <div style={{ marginTop: 12 }}>
           <h4>Edit Item</h4>
@@ -168,13 +150,12 @@ export default function DrawerPage() {
         </div>
       )}
 
-      {/* Items Table */}
       <table className="table" style={{ marginTop: 12 }}>
         <thead>
           <tr>
             <th style={{ width: "25%" }}>Name</th>
             <th style={{ width: "25%" }}>Image</th>
-            <th style={{ width: "25%" }}>Category</th> {/* 🆕 column */}
+            <th style={{ width: "25%" }}>Category</th>
             <th style={{ width: "25%" }}>Actions</th>
           </tr>
         </thead>
@@ -195,10 +176,20 @@ export default function DrawerPage() {
                 <td>{it.category || <em>None</em>}</td>
                 <td>
                   <div style={{ display: "flex", gap: 8 }}>
-                    <button className="button" type="button" onClick={() => startEdit(it.id)}>
+                    <button
+                      className="button"
+                      type="button"
+                      onClick={() => startEdit(it.id)}
+                      disabled={!editingEnabled}
+                    >
                       Edit
                     </button>
-                    <button className="button" type="button" onClick={() => deleteItem(it.id)}>
+                    <button
+                      className="button"
+                      type="button"
+                      onClick={() => deleteItem(it.id)}
+                      disabled={!editingEnabled}
+                    >
                       Delete
                     </button>
                   </div>
@@ -208,6 +199,12 @@ export default function DrawerPage() {
           )}
         </tbody>
       </table>
+
+      {!editingEnabled && (
+        <div style={{ color: "red", marginTop: 8, fontWeight: 600 }}>
+          Item editing is currently locked.
+        </div>
+      )}
     </div>
   );
 }

@@ -58,7 +58,7 @@ export default function AddEditItemForm({
 
   return (
     <form onSubmit={submit} className="card">
-      {/* 🧱 Basic info */}
+
       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
         <input
           name="name"
@@ -94,7 +94,7 @@ export default function AddEditItemForm({
         </div>
       )}
 
-      {/* 🧩 Drawer + Chest */}
+
       <div className="form-row" style={{ display: "flex", gap: 8, marginTop: 8 }}>
         <select
           name="chest"
@@ -120,7 +120,6 @@ export default function AddEditItemForm({
         </select>
       </div>
 
-      {/* 🆕 Category selection */}
       <div style={{ marginTop: 8 }}>
         <label>Category:</label>
         <select

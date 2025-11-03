@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate, createSearchParams } from "react-router-dom";
+import { locked } from "./data";
 
 type Props = { query: string; setQuery: (s: string) => void };
 

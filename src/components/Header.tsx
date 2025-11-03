@@ -1,3 +1,4 @@
+// Header.tsx
 import React from "react";
 import { useNavigate, createSearchParams } from "react-router-dom";
 
@@ -21,10 +22,19 @@ export default function Header({ query, setQuery }: Props) {
   return (
     <header className="header container">
       <h1>Inventory Lookup</h1>
-      <form onSubmit={onSearch} className="search" style={{width: "100%"}}>
-        <input className="input" placeholder="Search items..." value={query} onChange={(e) => setQuery(e.target.value)} />
-        <button type="submit" className="button">Search</button>
-        <button type="button" onClick={onReset} className="button">Home</button>
+      <form onSubmit={onSearch} className="search" style={{ width: "100%" }}>
+        <input
+          className="input"
+          placeholder="Search items..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <button type="submit" className="button">
+          Search
+        </button>
+        <button type="button" onClick={onReset} className="button">
+          Home
+        </button>
       </form>
     </header>
   );

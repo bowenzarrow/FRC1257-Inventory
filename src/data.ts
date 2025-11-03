@@ -17,3 +17,6 @@ export const DRAWERS: DrawerLabel[] = [
 export const SAMPLE_ITEMS: Item[] = [
 ];
 
+export const locked = false;
+
+
