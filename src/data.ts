@@ -15,7 +15,24 @@ export const DRAWERS: DrawerLabel[] = [
 ];
 
 export const SAMPLE_ITEMS: Item[] = [
+  {
+    id: "it1",
+    name: "Screwdriver",
+    imageUrl: "https://dummyimage.com/200x200/ddd/000&text=Screwdriver",
+    chest: "Electronics Chest",
+    drawer: "Top",
+    category: "Tools",
+  },
+  {
+    id: "it2",
+    name: "Hammer",
+    imageUrl: "https://dummyimage.com/200x200/ddd/000&text=Hammer",
+    chest: "Build Chest",
+    drawer: "2nd left",
+    category: "Tools",
+  },
 ];
+
 
 export const locked = false;
 
